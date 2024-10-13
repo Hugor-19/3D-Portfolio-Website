@@ -1,60 +1,102 @@
-const navs = document.querySelectorAll('.nav-list li');
-const cube = document.querySelector('.box');
-const sections = document.querySelectorAll('.section');
+//turn pages when click next or prev button
+const pageTurnBtn = document.querySelectorAll('.nextprev-btn');
 
-const resumeLists = document.querySelectorAll('.resume-list');
-const resumeBoxs = document.querySelectorAll('.resume-box');
+pageTurnBtn.forEach((el, index) => {
+    el.onclick = () => {
+        const pageTurnId = el.getAttribute('data-page');
+        const pageTurn = document.getElementById(pageTurnId);
 
-const portafolioLists = document.querySelectorAll('.portafolio-list');
-const portafolioBoxs = document.querySelectorAll('.portafolio-box');
-
-// navbar actions and all section actions along with cube rotation when navbar is clicked
-navs.forEach((nav, idx) => {
-    nav.addEventListener('click', () => {
-        document.querySelector('.nav-list li.active').classList.remove('active');
-        nav.classList.add('active');
-
-        cube.style.transform = `rotateY(${idx * -90}deg)`
-
-        document.querySelector('.section.active').classList.remove('active');
-        sections[idx].classList.add('active');
-
-        const array = Array.from(sections);
-        const arrSesc = array.slice(1, -1);
-        arrSesc.forEach(arrSesc => {
-            if (arrSesc.classList.contains('active')) {
-                sections[4].classList.add('action-contact');
-            }
-        });
-        if (sections[0].classList.contains('active')) {
-            sections[4].classList.remove('action-contact');
+        if (pageTurn.classList.contains('turn')) {
+            pageTurn.classList.remove('turn');
+            setTimeout(() => {
+                pageTurn.style.zIndex = 20 - index;
+            }, 500);
         }
-    });
-});
+        else {
+            pageTurn.classList.add('turn');
+            setTimeout(() => {
+                pageTurn.style.zIndex = 20 + index;
+            }, 500);
+        }
+    }
+})
 
-// resume section when clicking tab-list
-resumeLists.forEach((list, idx) => {
-    list.addEventListener('click', () => {
-        document.querySelector('.resume-list.active').classList.remove('active');
-        list.classList.add('active');
+//contact me button when click
+const pages = document.querySelectorAll('.book-page.page-right');
+const contactMeBtn = document.querySelector('.btn.contact-me');
 
-        document.querySelector('.resume-box.active').classList.remove('active');
-        resumeBoxs[idx].classList.add('active');
-    });
-});
+contactMeBtn.onclick = () => {
+    pages.forEach((page, index) => {
+        setTimeout(() => {
+            page.classList.add('turn');
 
-// portfolio section when clicking tab-list
-portafolioLists.forEach((list, idx) => {
-    list.addEventListener('click', () => {
-        document.querySelector('.portafolio-list.active').classList.remove('active');
-        list.classList.add('active');
+            setTimeout(() => {
+                page.style.zIndex = 20 + index;
+            }, 500)
 
-        document.querySelector('.portafolio-box.active').classList.remove('active');
-        portafolioBoxs[idx].classList.add('active');
-    });
-});
+        }, (index + 1) * 200 + 100)
+    })
+}
 
-// visibility for contact section when reloading (cube reloading animation)
+//create reverse index function
+let totalpages = pages.length;
+let pageNumber = 0;
+
+function reverseIndex() {
+    pageNumber--;
+    if (pageNumber < 0) {
+        pageNumber = totalpages - 1;
+    }
+}
+
+//back profile button when click
+const backProfileBtn = document.querySelector('.back-profile');
+
+backProfileBtn.onclick = () => {
+    pages.forEach((_, index) => {
+        setTimeout(() => {
+            reverseIndex();
+            pages[pageNumber].classList.remove('turn');
+
+            setTimeout(() => {
+                reverseIndex();
+                pages[pageNumber].style.zIndex = 10 + index;
+            }, 500)
+
+        }, (index + 1) * 200 + 100)
+    })
+}
+
+//opening animation
+const coverRight = document.querySelector('.cover.cover-right');
+const pageLeft = document.querySelector('.book-page.page-left');
+
+//opening animation (cover right animation)
 setTimeout(() => {
-    sections[4].classList.remove('active');
-}, 1500);
+    coverRight.classList.add('turn');
+}, 2100)
+
+setTimeout(() => {
+    pageLeft.style.zIndex = 20;
+}, 3200)
+
+//opening animation (page left or profile page animation)
+setTimeout(() => {
+    coverRight.style.zIndex = -1;
+}, 2800)
+
+//opening animation (all page right animation)
+pages.forEach((_, index) => {
+    setTimeout(() => {
+        reverseIndex();
+        pages[pageNumber].classList.remove('turn');
+
+        setTimeout(() => {
+            reverseIndex();
+            pages[pageNumber].style.zIndex = 10 + index;
+        }, 500)
+
+    }, (index + 1) * 200 + 2100)
+})
+
+//opening animation (page left or profile page animation)
